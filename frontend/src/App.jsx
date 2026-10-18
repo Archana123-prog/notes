@@ -3,7 +3,6 @@ import Navbar from './components/Navbar';
 import Sidebar from './components/Sidebar';
 import NoteCard from './components/NoteCard';
 import NoteModal from './components/NoteModal';
-import AuthModal from './components/AuthModal';
 import EmptyState from './components/EmptyState';
 import Toast from './components/Toast';
 import { api } from './services/api';
@@ -18,9 +17,10 @@ export default function App() {
   const [isArchivedFilter, setIsArchivedFilter] = useState(false);
   const [selectedTag, setSelectedTag] = useState(null);
 
-  // Authentication state
-  const [currentUser, setCurrentUser] = useState(api.auth.getCurrentUser());
-  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  // Theme state: 'light' (white theme) or 'dark'
+  const [theme, setTheme] = useState(() => {
+    return localStorage.getItem('notes_theme') || 'light';
+  });
 
   // Note Modal state
   const [isNoteModalOpen, setIsNoteModalOpen] = useState(false);
@@ -29,6 +29,16 @@ export default function App() {
   // Notifications
   const [toasts, setToasts] = useState([]);
   const [dbStatus, setDbStatus] = useState('checking');
+
+  // Apply theme to document element
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('notes_theme', theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme((prevTheme) => (prevTheme === 'dark' ? 'light' : 'dark'));
+  };
 
   // Helper to trigger toast notifications
   const showToast = useCallback((message, type = 'success') => {
@@ -50,7 +60,7 @@ export default function App() {
       if (data?.database?.status === 'connected') {
         setDbStatus('connected');
       } else {
-        setDbStatus('connected'); // Fallback or active
+        setDbStatus('connected');
       }
     } catch {
       setDbStatus('disconnected');
@@ -138,7 +148,6 @@ export default function App() {
   // Quick toggle pin
   const handleTogglePin = async (id) => {
     try {
-      // Optimistic update
       setNotes((prev) =>
         prev.map((n) => (n.id === id ? { ...n, is_pinned: !n.is_pinned } : n))
       );
@@ -164,38 +173,6 @@ export default function App() {
     }
   };
 
-  // Auth: Login
-  const handleLogin = async (email, password) => {
-    try {
-      const data = await api.auth.login(email, password);
-      setCurrentUser(data.user);
-      showToast(`Welcome back, ${data.user.name}!`, 'success');
-      loadNotes();
-    } catch (err) {
-      throw err;
-    }
-  };
-
-  // Auth: Register
-  const handleRegister = async (name, email, password) => {
-    try {
-      const data = await api.auth.register(name, email, password);
-      setCurrentUser(data.user);
-      showToast(`Account created! Welcome, ${data.user.name}!`, 'success');
-      loadNotes();
-    } catch (err) {
-      throw err;
-    }
-  };
-
-  // Auth: Logout
-  const handleLogout = () => {
-    api.auth.logout();
-    setCurrentUser(null);
-    showToast('Logged out of cloud session', 'info');
-    loadNotes();
-  };
-
   const handleOpenCreateModal = () => {
     setEditingNote(null);
     setIsNoteModalOpen(true);
@@ -216,15 +193,14 @@ export default function App() {
 
   return (
     <div className="app-container">
-      {/* Top Navbar */}
+      {/* Top Navbar with Theme Toggle */}
       <Navbar
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
-        currentUser={currentUser}
-        onOpenAuthModal={() => setIsAuthModalOpen(true)}
-        onLogout={handleLogout}
         onOpenCreateModal={handleOpenCreateModal}
         dbStatus={dbStatus}
+        theme={theme}
+        toggleTheme={toggleTheme}
       />
 
       {/* Main Layout: Sidebar + Notes Area */}
@@ -303,14 +279,6 @@ export default function App() {
         }}
         onSave={handleSaveNote}
         initialNote={editingNote}
-      />
-
-      {/* Authentication Modal */}
-      <AuthModal
-        isOpen={isAuthModalOpen}
-        onClose={() => setIsAuthModalOpen(false)}
-        onLogin={handleLogin}
-        onRegister={handleRegister}
       />
 
       {/* Toast Notification Container */}

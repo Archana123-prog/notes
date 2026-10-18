@@ -1,14 +1,13 @@
 import React from 'react';
-import { NoteIcon, SearchIcon, PlusIcon, UserIcon, LogoutIcon, DatabaseIcon, CloseIcon } from './Icons';
+import { NoteIcon, SearchIcon, PlusIcon, DatabaseIcon, CloseIcon, SunIcon, MoonIcon } from './Icons';
 
 export default function Navbar({
   searchQuery,
   setSearchQuery,
-  currentUser,
-  onOpenAuthModal,
-  onLogout,
   onOpenCreateModal,
   dbStatus,
+  theme,
+  toggleTheme,
 }) {
   return (
     <header className="navbar-wrapper glass-panel">
@@ -57,29 +56,16 @@ export default function Navbar({
             <span className="status-text">{dbStatus === 'connected' ? 'Neon Active' : 'Connecting'}</span>
           </div>
 
-          {/* User Auth Profile */}
-          {currentUser ? (
-            <div className="user-profile-menu">
-              <div className="user-avatar" title={currentUser.email}>
-                {currentUser.name ? currentUser.name.charAt(0).toUpperCase() : 'U'}
-              </div>
-              <div className="user-info">
-                <span className="user-name">{currentUser.name}</span>
-              </div>
-              <button
-                className="btn btn-ghost btn-sm logout-btn"
-                onClick={onLogout}
-                title="Log out"
-              >
-                <LogoutIcon size={16} />
-              </button>
-            </div>
-          ) : (
-            <button className="btn btn-secondary btn-sm" onClick={onOpenAuthModal}>
-              <UserIcon size={16} />
-              <span>Sign In / Sign Up</span>
-            </button>
-          )}
+          {/* Theme Toggle Button (Light / Dark) */}
+          <button
+            className="btn btn-secondary btn-icon theme-toggle-btn"
+            onClick={toggleTheme}
+            title={theme === 'dark' ? 'Switch to White Theme' : 'Switch to Dark Theme'}
+            aria-label="Toggle theme"
+          >
+            {theme === 'dark' ? <SunIcon size={18} /> : <MoonIcon size={18} />}
+            <span className="theme-toggle-label">{theme === 'dark' ? 'Light' : 'Dark'}</span>
+          </button>
 
           {/* New Note Button */}
           <button className="btn btn-primary" onClick={onOpenCreateModal}>

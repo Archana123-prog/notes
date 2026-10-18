@@ -1,23 +1,12 @@
 /* ========================================================
-   AuraNotes Premium Design System
+   AuraNotes Design System - Light & Dark Theme Support
    ======================================================== */
 
 :root {
   --font-heading: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
 
-  /* Color Palette */
-  --bg-dark: #090d16;
-  --bg-card: rgba(18, 24, 38, 0.7);
-  --bg-card-hover: rgba(26, 34, 52, 0.85);
-  --bg-sidebar: rgba(13, 18, 30, 0.85);
-  --border-subtle: rgba(255, 255, 255, 0.08);
-  --border-highlight: rgba(99, 102, 241, 0.3);
-
-  --text-primary: #f8fafc;
-  --text-secondary: #94a3b8;
-  --text-muted: #64748b;
-
+  /* Universal Accents */
   --accent-primary: #6366f1;
   --accent-primary-hover: #4f46e5;
   --accent-gradient: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #ec4899 100%);
@@ -35,14 +24,73 @@
 
   --transition-fast: 0.15s ease;
   --transition-normal: 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ========================================================
+   Dark Theme (Default)
+   ======================================================== */
+:root, [data-theme="dark"] {
+  --bg-dark: #090d16;
+  --bg-card: rgba(18, 24, 38, 0.78);
+  --bg-card-hover: rgba(26, 34, 52, 0.9);
+  --bg-sidebar: rgba(13, 18, 30, 0.85);
+  --bg-input: rgba(255, 255, 255, 0.05);
+  --bg-input-focus: rgba(255, 255, 255, 0.08);
+  --bg-modal: #111827;
+  --bg-modal-backdrop: rgba(5, 8, 15, 0.8);
+
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-highlight: rgba(99, 102, 241, 0.4);
+
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+
   --shadow-glass: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-  --shadow-glow: 0 0 20px rgba(99, 102, 241, 0.35);
+  --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.25);
+  --card-footer-bg: rgba(0, 0, 0, 0.2);
+
+  --bg-gradient-radial: 
+    radial-gradient(at 10% 15%, rgba(99, 102, 241, 0.14) 0px, transparent 50%),
+    radial-gradient(at 90% 20%, rgba(236, 72, 153, 0.09) 0px, transparent 50%),
+    radial-gradient(at 50% 80%, rgba(139, 92, 246, 0.11) 0px, transparent 60%);
+}
+
+/* ========================================================
+   White / Light Theme
+   ======================================================== */
+[data-theme="light"] {
+  --bg-dark: #f8fafc;
+  --bg-card: #ffffff;
+  --bg-card-hover: #ffffff;
+  --bg-sidebar: #ffffff;
+  --bg-input: #f1f5f9;
+  --bg-input-focus: #ffffff;
+  --bg-modal: #ffffff;
+  --bg-modal-backdrop: rgba(15, 23, 42, 0.45);
+
+  --border-subtle: rgba(0, 0, 0, 0.08);
+  --border-highlight: rgba(99, 102, 241, 0.5);
+
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #94a3b8;
+
+  --shadow-glass: 0 10px 30px -5px rgba(0, 0, 0, 0.06), 0 4px 6px -2px rgba(0, 0, 0, 0.03);
+  --shadow-card: 0 4px 20px -2px rgba(0, 0, 0, 0.06), 0 2px 6px -1px rgba(0, 0, 0, 0.04);
+  --card-footer-bg: #f8fafc;
+
+  --bg-gradient-radial: 
+    radial-gradient(at 10% 15%, rgba(99, 102, 241, 0.06) 0px, transparent 50%),
+    radial-gradient(at 90% 20%, rgba(236, 72, 153, 0.04) 0px, transparent 50%),
+    radial-gradient(at 50% 80%, rgba(139, 92, 246, 0.05) 0px, transparent 60%);
 }
 
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  transition: background-color var(--transition-normal), border-color var(--transition-normal);
 }
 
 body {
@@ -51,10 +99,7 @@ body {
   color: var(--text-primary);
   min-height: 100vh;
   overflow-x: hidden;
-  background-image:
-    radial-gradient(at 10% 15%, rgba(99, 102, 241, 0.12) 0px, transparent 50%),
-    radial-gradient(at 90% 20%, rgba(236, 72, 153, 0.08) 0px, transparent 50%),
-    radial-gradient(at 50% 80%, rgba(139, 92, 246, 0.1) 0px, transparent 60%);
+  background-image: var(--bg-gradient-radial);
   background-attachment: fixed;
   -webkit-font-smoothing: antialiased;
 }
@@ -70,12 +115,12 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(150, 150, 150, 0.25);
   border-radius: 999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.25);
+  background: rgba(150, 150, 150, 0.4);
 }
 
 /* Typography */
@@ -106,7 +151,7 @@ button, input, textarea, select {
   gap: 24px;
 }
 
-/* Glassmorphism Surface Utility */
+/* Surface Utility */
 .glass-panel {
   background: var(--bg-card);
   backdrop-filter: blur(16px);
@@ -152,14 +197,13 @@ button, input, textarea, select {
 }
 
 .btn-secondary {
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--bg-input);
   color: var(--text-primary);
   border: 1px solid var(--border-subtle);
 }
 
 .btn-secondary:hover {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.15);
+  border-color: var(--border-highlight);
 }
 
 .btn-ghost {
@@ -169,17 +213,17 @@ button, input, textarea, select {
 
 .btn-ghost:hover {
   color: var(--text-primary);
-  background: rgba(255, 255, 255, 0.06);
+  background: var(--bg-input);
 }
 
 .btn-danger {
-  background: rgba(239, 68, 68, 0.12);
-  color: #f87171;
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
   border: 1px solid rgba(239, 68, 68, 0.25);
 }
 
 .btn-danger:hover {
-  background: rgba(239, 68, 68, 0.2);
+  background: rgba(239, 68, 68, 0.18);
 }
 
 .btn-sm {
@@ -194,11 +238,6 @@ button, input, textarea, select {
   to { opacity: 1; transform: translateY(0); }
 }
 
-@keyframes slideDown {
-  from { opacity: 0; transform: translateY(-12px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
 @keyframes scaleUp {
   from { opacity: 0; transform: scale(0.95); }
   to { opacity: 1; transform: scale(1); }
@@ -210,19 +249,6 @@ button, input, textarea, select {
 
 .animate-scale-up {
   animation: scaleUp 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-/* Badges */
-.badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  padding: 4px 8px;
-  font-size: 0.72rem;
-  font-weight: 600;
-  border-radius: 999px;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
 }
 
 /* Responsiveness */

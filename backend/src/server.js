@@ -19,11 +19,13 @@ const CLIENT_URL = process.env.CLIENT_URL || 'http://localhost:5173';
 // Middleware Configuration
 // ==========================================
 
-// 1. CORS Configuration to connect Backend to React Frontend
-const allowedOrigins = [
-  CLIENT_URL,
-  'http://localhost:5173', // Vite standard React port
-  'http://localhost:3000', // Create-React-App standard port
+// 1. CORS Configuration to connect Backend to React Frontend (Vercel & Local)
+const rawClientUrls = process.env.CLIENT_URL ? process.env.CLIENT_URL.split(',').map(u => u.trim()) : [];
+
+const defaultAllowedOrigins = [
+  ...rawClientUrls,
+  'http://localhost:5173',
+  'http://localhost:3000',
   'http://127.0.0.1:5173',
   'http://127.0.0.1:3000',
 ];
@@ -33,7 +35,14 @@ app.use(
     origin: (origin, callback) => {
       // Allow requests with no origin (like mobile apps, curl, postman)
       if (!origin) return callback(null, true);
-      if (allowedOrigins.indexOf(origin) !== -1 || process.env.NODE_ENV !== 'production') {
+
+      // Allow if matches allowed list, ends with .vercel.app, or in development
+      const isAllowed =
+        defaultAllowedOrigins.includes(origin) ||
+        origin.endsWith('.vercel.app') ||
+        process.env.NODE_ENV !== 'production';
+
+      if (isAllowed) {
         return callback(null, true);
       }
       return callback(new Error(`CORS blocked for origin: ${origin}`));
@@ -43,6 +52,7 @@ app.use(
     allowedHeaders: ['Content-Type', 'Authorization'],
   })
 );
+
 
 // 2. Request body parsing
 app.use(express.json());
