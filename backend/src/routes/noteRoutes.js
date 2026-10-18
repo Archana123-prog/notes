@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const noteController = require('../controllers/noteController');
 const { optionalAuth } = require('../middleware/authMiddleware');
+const { createNoteLimiter } = require('../middleware/rateLimiter');
 
 // All note routes support both authenticated users (isolated notes) and guest mode
 router.use(optionalAuth);
@@ -12,8 +13,8 @@ router.get('/', noteController.getNotes);
 // GET /api/notes/:id - Get single note by ID
 router.get('/:id', noteController.getNoteById);
 
-// POST /api/notes - Create a new note
-router.post('/', noteController.createNote);
+// POST /api/notes - Create a new note (Rate limited: max 2 notes per 1 minute)
+router.post('/', createNoteLimiter, noteController.createNote);
 
 // PUT /api/notes/:id - Update an existing note
 router.put('/:id', noteController.updateNote);

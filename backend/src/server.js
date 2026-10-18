@@ -15,6 +15,9 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 const CLIENT_URL = process.env.CLIENT_URL || 'http://localhost:5173';
 
+// Trust proxy for proper IP resolution when deployed behind Render / Vercel
+app.set('trust proxy', 1);
+
 // ==========================================
 // Middleware Configuration
 // ==========================================
