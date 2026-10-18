@@ -1,0 +1,33 @@
+{
+  "name": "notes-app-backend",
+  "version": "1.0.0",
+  "description": "Backend API for Notes Taking Application with Neon DB and Node.js",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js",
+    "db:init": "node src/scripts/initDb.js"
+  },
+  "keywords": [
+    "nodejs",
+    "express",
+    "neon",
+    "postgresql",
+    "notes-app",
+    "rest-api"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "jsonwebtoken": "^9.0.2",
+    "morgan": "^1.10.0",
+    "pg": "^8.13.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9"
+  }
+}
